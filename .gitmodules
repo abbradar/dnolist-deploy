@@ -1,18 +1,18 @@
 [submodule "nixpkgs"]
 	path = nixpkgs
-	url = /home/shlomo/nixpkgs
+	url = https://github.com/abbradar/nixpkgs
 [submodule "dnolist"]
 	path = dnolist
-	url = /home/shlomo/dnolist/repos/dnolist
+	url = https://github.com/abbradar/dnolist
 [submodule "smtp"]
 	path = smtp
-	url = /home/shlomo/dnolist/repos/smtp
+	url = https://github.com/abbradar/smtp
 [submodule "email"]
 	path = email
-	url = /home/shlomo/dnolist/repos/email
+	url = https://github.com/abbradar/email
 [submodule "email-header"]
 	path = email-header
-	url = /home/shlomo/dnolist/repos/email-header
-[submodule "frontend"]
-	path = frontend
-	url = /home/shlomo/dnolist/repos/frontend
+	url = https://github.com/abbradar/email-header
+[submodule "dnolist-frontend"]
+	path = dnolist-frontend
+	url = https://github.com/abbradar/dnolist-frontend

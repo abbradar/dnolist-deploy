@@ -7,7 +7,7 @@
   };
 
   packageOverrides = self: {
-    dnolist-frontend = self.callPackage ./frontend {
+    dnolist-frontend = self.callPackage ./dnolist-frontend {
       ruby = self.ruby_2_2;
     };
   };
