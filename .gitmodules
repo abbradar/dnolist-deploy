@@ -1,0 +1,18 @@
+[submodule "nixpkgs"]
+	path = nixpkgs
+	url = /home/shlomo/nixpkgs
+[submodule "dnolist"]
+	path = dnolist
+	url = /home/shlomo/dnolist/repos/dnolist
+[submodule "smtp"]
+	path = smtp
+	url = /home/shlomo/dnolist/repos/smtp
+[submodule "email"]
+	path = email
+	url = /home/shlomo/dnolist/repos/email
+[submodule "email-header"]
+	path = email-header
+	url = /home/shlomo/dnolist/repos/email-header
+[submodule "frontend"]
+	path = frontend
+	url = /home/shlomo/dnolist/repos/frontend

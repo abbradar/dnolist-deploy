@@ -1,0 +1,5 @@
+domain: list
+smtpAddress: mail
+smtpPort: 25
+database: database
+expiration: 300
