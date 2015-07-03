@@ -66,6 +66,11 @@ in
       enable = true;
       package = pkgs.postgresql94;
       enableTCPIP = true;
+      initialScript = ./init-db.sql;
+      authentication = pkgs.lib.mkForce ''
+        local all all trust
+        host  all all 0.0.0.0/0 trust 
+      '';
     };
 
     systemd.services.migration = {

@@ -1,5 +1,5 @@
 domain: list
 smtpAddress: mail
 smtpPort: 25
-database: host=database port=5432 user=dnolist dbname=dnolist password=dnolist
-expiration: 300
+database: "host=database port=5432 user=dnolist dbname=dnolist password=dnolist"
+expiration: 300.0
