@@ -1,6 +1,6 @@
 let myconfig = import ./config.nix;
     dnocfg = ./config.yaml;
-    dnolistService = service: {
+    dnolistService = pkgs: service: {
       after = [ "local-fs.target" "network.target" ];
       wantedBy = [ "multi-user.target" ];
       environment.DNOLIST_SETTINGS = dnocfg;
@@ -76,8 +76,8 @@ in
       serviceConfig.Type = "oneshot";
     };
 
-    systemd.services.session = dnolistService "session";
-    systemd.services.sysop = dnolistService "sysop";
+    systemd.services.session = dnolistService pkgs "session";
+    systemd.services.sysop = dnolistService pkgs "sysop";
   };
 
   smtp-server = { config, pkgs, ... }: {
@@ -87,8 +87,8 @@ in
 
     networking.firewall.allowedTCPPorts = [ 25 ];
 
-    systemd.services.smtp-server = dnolistService "smtp-server";
-    systemd.services.outgoing-queue = dnolistService "outgoing-queue";
+    systemd.services.smtp-server = dnolistService pkgs "smtp-server";
+    systemd.services.outgoing-queue = dnolistService pkgs "outgoing-queue";
   };
 
 }
