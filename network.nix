@@ -1,20 +1,12 @@
 let myconfig = import ./config.nix;
     dnocfg = ./config.yaml;
-    dnolistMachine = service: { config, pkgs, ... }: {
-      deployment.targetEnv = "virtualbox";
-      deployment.virtualbox.headless = true;
-      nixpkgs.config = myconfig;
-
-      networking.firewall.allowedTCPPorts = [ 25 80 ];
-
-      systemd.services.${service} = {
-        after = [ "local-fs.target" "network.target" ];
-        wantedBy = [ "multi-user.target" ];
-        environment.DNOLIST_SETTINGS = dnocfg;
-        script = "${pkgs.haskellPackages.dnolist}/bin/${service}";
-        serviceConfig.Restart = "always";
-      };
-
+    dnolistService = service: {
+      after = [ "local-fs.target" "network.target" ];
+      wantedBy = [ "multi-user.target" ];
+      environment.DNOLIST_SETTINGS = dnocfg;
+      script = "${pkgs.haskellPackages.dnolist}/bin/${service}";
+      serviceConfig.Restart = "always";
+      serviceConfig.RestartDelay = "500ms";
     };
 in
 {
@@ -52,24 +44,15 @@ in
       '';
     };
 
-    networking.firewall.allowedTCPPorts = [ 25 143 ];
-    networking.firewall.allowPing = true;
-  };
-
-  frontend = { config, pkgs, ... }: {
-    deployment.targetEnv = "virtualbox";
-    deployment.virtualbox.headless = true;
-    nixpkgs.config = myconfig;
-
-    networking.firewall.allowedTCPPorts = [ 80 ];
-    networking.firewall.allowPing = true;
-
     systemd.services.frontend = {
       after = [ "local-fs.target" "network.target" ];
       wantedBy = [ "multi-user.target" ];
       script = "${pkgs.dnolist-frontend}/bin/frontend";
       serviceConfig.Restart = "always";
     };
+
+    networking.firewall.allowedTCPPorts = [ 25 80 143 ];
+    networking.firewall.allowPing = true;
   };
 
   database = { config, pkgs, ... }: {
@@ -77,7 +60,7 @@ in
     deployment.virtualbox.headless = true;
     nixpkgs.config = myconfig;
    
-    networking.firewall.allowedTCPPorts = [ 5432 ];
+    networking.firewall.allowedTCPPorts = [ 5432 8081 8082 ];
 
     services.postgresql = {
       enable = true;
@@ -92,11 +75,20 @@ in
       script = "${pkgs.haskellPackages.dnolist}/bin/migration";
       serviceConfig.Type = "oneshot";
     };
+
+    systemd.services.session = dnolistService "session";
+    systemd.services.sysop = dnolistService "sysop";
   };
 
-  session = dnolistMachine "session";
-  sysop = dnolistMachine "sysop";
-  outgoing-queue = dnolistMachine "outgoing-queue";
-  smtp-server = dnolistMachine "smtp-server";
+  smtp-server = { config, pkgs, ... }: {
+    deployment.targetEnv = "virtualbox";
+    deployment.virtualbox.headless = true;
+    nixpkgs.config = myconfig;
+
+    networking.firewall.allowedTCPPorts = [ 25 ];
+
+    systemd.services.smtp-server = dnolistService "smtp-server";
+    systemd.services.outgoing-queue = dnolistService "outgoing-queue";
+  };
 
 }
