@@ -1,2 +1,2 @@
-CREATE USER dnolist PASSWORD dnolist;
+CREATE USER dnolist UNENCRYPTED PASSWORD 'dnolist';
 CREATE DATABASE dnolist OWNER dnolist;

@@ -1,5 +1,6 @@
 let myconfig = import ./config.nix;
     dnocfg = ./config.yaml;
+    memory = 512;
     dnolistService = pkgs: service: {
       after = [ "local-fs.target" "network.target" ];
       wantedBy = [ "multi-user.target" ];
@@ -14,6 +15,7 @@ in
   {
     deployment.targetEnv = "virtualbox";
     deployment.virtualbox.headless = true;
+    deployment.virtualbox.memorySize = memory;
     nixpkgs.config = myconfig;
 
     environment.systemPackages = with pkgs; [
@@ -58,6 +60,7 @@ in
   database = { config, pkgs, ... }: {
     deployment.targetEnv = "virtualbox";
     deployment.virtualbox.headless = true;
+    deployment.virtualbox.memorySize = memory;
     nixpkgs.config = myconfig;
    
     networking.firewall.allowedTCPPorts = [ 5432 8081 8082 ];
@@ -88,6 +91,7 @@ in
   smtp-server = { config, pkgs, ... }: {
     deployment.targetEnv = "virtualbox";
     deployment.virtualbox.headless = true;
+    deployment.virtualbox.memorySize = memory;
     nixpkgs.config = myconfig;
 
     networking.firewall.allowedTCPPorts = [ 25 ];
