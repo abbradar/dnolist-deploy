@@ -24,10 +24,11 @@ in
 
     services.opensmtpd = {
       enable = true;
+      extraServerArgs = [ "-T lookup" ];
       serverConfiguration = ''
         listen on 0.0.0.0
         accept from any for local deliver to lmtp "/var/run/dovecot2/lmtp"
-        accept from any for domain list deliver to lmtp smtp-incoming:25
+        accept from any for domain list deliver to lmtp smtp-server:8025
       '';
     };
 
@@ -49,7 +50,7 @@ in
     systemd.services.frontend = {
       after = [ "local-fs.target" "network.target" ];
       wantedBy = [ "multi-user.target" ];
-      script = "${pkgs.dnolist-frontend}/bin/frontend";
+      script = "${pkgs.dnolist-frontend}/frontend.rb";
       serviceConfig.Restart = "always";
     };
 
@@ -84,8 +85,8 @@ in
       serviceConfig.Type = "oneshot";
     };
 
-    systemd.services.session = dnolistService pkgs "session";
     systemd.services.sysop = dnolistService pkgs "sysop";
+    systemd.services.session = dnolistService pkgs "session";
   };
 
   smtp-server = { config, pkgs, ... }: {
@@ -94,7 +95,7 @@ in
     deployment.virtualbox.memorySize = memory;
     nixpkgs.config = myconfig;
 
-    networking.firewall.allowedTCPPorts = [ 25 ];
+    networking.firewall.allowedTCPPorts = [ 8025 ];
 
     systemd.services.smtp-server = dnolistService pkgs "smtp-server";
     systemd.services.outgoing-queue = dnolistService pkgs "outgoing-queue";
